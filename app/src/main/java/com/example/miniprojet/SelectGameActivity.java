@@ -13,7 +13,7 @@ import com.example.miniprojet.Mathematiques.TableSelectionActivity;
 
 public class SelectGameActivity extends AppCompatActivity {
 
-    private CardView mathGame1, cultureGame3;
+    private CardView mathGame1, mathGame2, mathGame3, mathGame4, cultureGame1, cultureGame2, cultureGame3, cultureGame4;
     private Button logoutButton;
 
     @Override
@@ -22,7 +22,13 @@ public class SelectGameActivity extends AppCompatActivity {
         setContentView(R.layout.select_game);
 
         mathGame1 = findViewById(R.id.mathGame1);
+        mathGame2 = findViewById(R.id.mathGame2);
+        mathGame3 = findViewById(R.id.mathGame3);
+        mathGame4 = findViewById(R.id.mathGame4);
+        cultureGame1 = findViewById(R.id.cultureGame1);
+        cultureGame2 = findViewById(R.id.cultureGame2);
         cultureGame3 = findViewById(R.id.cultureGame3);
+        cultureGame4 = findViewById(R.id.cultureGame4);
         logoutButton = findViewById(R.id.logoutButton);
 
         // Gérer les événements de clic
@@ -50,7 +56,15 @@ public class SelectGameActivity extends AppCompatActivity {
         });
 
         // Désactiver certains jeux (griser)
-        disableGame(cultureGame3); // Exemple : désactiver ce jeu spécifique
+        disableGame(mathGame2);
+        disableGame(mathGame3);
+        disableGame(mathGame4);
+        disableGame(cultureGame1);
+        disableGame(cultureGame2);
+        disableGame(cultureGame4);
+
+
+
     }
 
     // Fonction pour désactiver un jeu
