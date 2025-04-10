@@ -1,202 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color">
+package com.example.miniprojet;
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Jeux de Mathématiques"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+import com.example.miniprojet.Mathematiques.TableSelectionActivity;
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/mathGame1"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
+public class SelectGameActivity extends AppCompatActivity {
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Calcul Mental"
-                    android:layout_gravity="center"/>
+    private CardView mathGame1, cultureGame3;
+    private Button logoutButton;
 
-            </androidx.cardview.widget.CardView>
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.select_game);
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/mathGame2"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
+        mathGame1 = findViewById(R.id.mathGame1);
+        cultureGame3 = findViewById(R.id.cultureGame3);
+        logoutButton = findViewById(R.id.logoutButton);
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Géométrie"
-                    android:layout_gravity="center"/>
+        // Gérer les événements de clic
+        mathGame1.setOnClickListener(v -> {
+            Intent intent = new Intent(SelectGameActivity.this, TableSelectionActivity.class);
+            startActivity(intent);
+        });
 
-            </androidx.cardview.widget.CardView>
+        cultureGame3.setOnClickListener(v -> {
+            Intent intent = new Intent(SelectGameActivity.this, DifficultyActivity.class);
+            intent.putExtra("game", "Science");
+            startActivity(intent);
+        });
 
-        </LinearLayout>
+        // Ajouter la fonctionnalité de déconnexion
+        logoutButton.setOnClickListener(v -> {
+            // Enlever l'information de l'utilisateur connecté
+            SharedPreferences preferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            preferences.edit().putBoolean("is_logged_in", false).apply();
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            // Retour à l'écran de connexion
+            Intent loginIntent = new Intent(SelectGameActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+            finish(); // Fermer l'activité actuelle
+        });
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/mathGame3"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
+        // Désactiver certains jeux (griser)
+        disableGame(cultureGame3); // Exemple : désactiver ce jeu spécifique
+    }
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Algèbre"
-                    android:layout_gravity="center"/>
+    // Fonction pour désactiver un jeu
+    private void disableGame(CardView gameCard) {
+        gameCard.setCardBackgroundColor(getResources().getColor(R.color.disabled_game)); // Gris
+        gameCard.setClickable(false); // Désactiver le clic
+        gameCard.setAlpha(0.5f); // Ajouter un effet visuel (transparence)
+    }
+}
 
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/mathGame4"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Probabilités"
-                    android:layout_gravity="center"/>
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Jeux de Culture Générale"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cultureGame1"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Histoire"
-                    android:layout_gravity="center"/>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cultureGame2"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Géographie"
-                    android:layout_gravity="center"/>
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cultureGame3"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sciences"
-                    android:layout_gravity="center"/>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cultureGame4"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Arts"
-                    android:layout_gravity="center"/>
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>

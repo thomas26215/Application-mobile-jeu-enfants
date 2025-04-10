@@ -29,18 +29,22 @@ public class ChooseLevel extends AppCompatActivity implements LevelAdapter.OnLev
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_level);
 
-        // Restauration du contexte de jeu (game et difficulty) via Intent
+        // Récupération des données envoyées par Intent
         getIntentData();
 
-        // Initialisation du générateur de questions
+        // Initialisation du QuestionGenerator
         questionGenerator = new QuestionGenerator();
 
-        // Configuration de l’UI
+        // Configuration de la Toolbar
         setupToolbar();
+
+        // Configuration du bouton retour
         setupBackButton();
+
+        // Configuration du RecyclerView
         setupRecyclerView();
 
-        // Génération dynamique des niveaux en fonction de la difficulté
+        // Génération des niveaux basée sur les questions disponibles
         generateLevels();
     }
 
@@ -49,7 +53,7 @@ public class ChooseLevel extends AppCompatActivity implements LevelAdapter.OnLev
         game = intent.getStringExtra("game");
         difficulty = intent.getStringExtra("difficulty");
 
-        // En cas de données manquantes, fin prématurée de l’activité
+        // Vérification des données reçues
         if (game == null || difficulty == null) {
             Toast.makeText(this, "Données de jeu ou difficulté invalides", Toast.LENGTH_SHORT).show();
             finish();
@@ -67,7 +71,6 @@ public class ChooseLevel extends AppCompatActivity implements LevelAdapter.OnLev
     private void setupBackButton() {
         ImageButton backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
-            // Retour à l’activité précédente sans créer de nouvelle instance
             finish();
         });
     }
@@ -80,7 +83,7 @@ public class ChooseLevel extends AppCompatActivity implements LevelAdapter.OnLev
     }
 
     /**
-     * Génère la liste des niveaux disponibles selon le nombre de questions
+     * Génère les niveaux dynamiquement en fonction du nombre de questions disponibles
      */
     private void generateLevels() {
         int questionCount = getQuestionCountForDifficulty();
@@ -127,15 +130,13 @@ public class ChooseLevel extends AppCompatActivity implements LevelAdapter.OnLev
         intent.putExtra("game", game);
         intent.putExtra("difficulty", difficulty);
         intent.putExtra("level", levelNumber);
-
-        // Pas besoin de terminer cette activité : retour possible avec le bouton back
         startActivity(intent);
+
     }
 
     @Override
     public void onBackPressed() {
-        // Utilise le comportement par défaut (retour à l'activité précédente dans la pile)
         super.onBackPressed();
+
     }
 }
-
