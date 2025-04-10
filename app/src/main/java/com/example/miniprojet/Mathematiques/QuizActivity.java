@@ -136,6 +136,7 @@ public class QuizActivity extends AppCompatActivity {
             }
         }
 
+        // Send results to ResultActivity
         Intent resultIntent = new Intent(this, ResultActivity.class);
         resultIntent.putStringArrayListExtra("questions", questionsList);
         resultIntent.putStringArrayListExtra("answers", answersList);
@@ -230,3 +231,4 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 }
+

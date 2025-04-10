@@ -27,6 +27,7 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+        // Récupération des données envoyées via Intent
         questions = getIntent().getStringArrayListExtra("questions");
         answers = getIntent().getStringArrayListExtra("answers");
         correctAnswers = getIntent().getStringArrayListExtra("correctAnswers");
@@ -36,60 +37,60 @@ public class ResultActivity extends AppCompatActivity {
         table = getIntent().getIntExtra("table", 1);
         questionIndices = getIntent().getIntegerArrayListExtra("questionIndices");
 
+        // Initialisation des vues
         resultsContainer = findViewById(R.id.resultsContainer);
         TextView scoreText = findViewById(R.id.scoreText);
         scoreText.setText(String.format("Score : %d/%d", score, total));
 
+        // Affichage des résultats sans solutions par défaut
         showResults(false);
 
+        // Configuration des boutons
         Button correctButton = findViewById(R.id.correctButton);
         Button solutionButton = findViewById(R.id.solutionButton);
         Button homeButton = findViewById(R.id.homeButton);
 
+        // Gestion des clics sur les boutons
         correctButton.setOnClickListener(v -> launchCorrectionMode());
         solutionButton.setOnClickListener(v -> showResults(true));
-        homeButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            finish();
-        });
+        homeButton.setOnClickListener(v -> navigateToHome());
     }
 
     private void showResults(boolean showSolutions) {
         resultsContainer.removeAllViews();
 
         for (int i = 0; i < questions.size(); i++) {
-            View resultItem = getLayoutInflater().inflate(R.layout.item_result, resultsContainer, false);
-            LinearLayout itemLayout = resultItem.findViewById(R.id.itemLayout);
-
-            TextView questionText = resultItem.findViewById(R.id.questionText);
-            TextView userAnswerText = resultItem.findViewById(R.id.userAnswerText);
-            TextView correctAnswerText = resultItem.findViewById(R.id.correctAnswerText);
-            TextView resultIcon = resultItem.findViewById(R.id.resultIcon);
-
-            questionText.setText(questions.get(i));
-            userAnswerText.setText("Votre réponse : " + answers.get(i));
-
-            boolean isCorrect = results[i];
-            resultIcon.setText(isCorrect ? "✓" : "✗");
-            resultIcon.setTextColor(isCorrect ? Color.GREEN : Color.RED);
-
-            if (isCorrect) {
-                itemLayout.setBackgroundResource(R.drawable.correct_item_background);
-            } else {
-                itemLayout.setBackgroundResource(R.drawable.incorrect_item_background);
-            }
-
-            if (showSolutions) {
-                correctAnswerText.setVisibility(View.VISIBLE);
-                correctAnswerText.setText("Solution : " + correctAnswers.get(i));
-            } else {
-                correctAnswerText.setVisibility(View.GONE);
-            }
-
+            View resultItem = createResultItem(i, showSolutions);
             resultsContainer.addView(resultItem);
         }
+    }
+
+    private View createResultItem(int index, boolean showSolutions) {
+        View resultItem = getLayoutInflater().inflate(R.layout.item_result, resultsContainer, false);
+        LinearLayout itemLayout = resultItem.findViewById(R.id.itemLayout);
+
+        TextView questionText = resultItem.findViewById(R.id.questionText);
+        TextView userAnswerText = resultItem.findViewById(R.id.userAnswerText);
+        TextView correctAnswerText = resultItem.findViewById(R.id.correctAnswerText);
+        TextView resultIcon = resultItem.findViewById(R.id.resultIcon);
+
+        questionText.setText(questions.get(index));
+        userAnswerText.setText("Votre réponse : " + answers.get(index));
+
+        boolean isCorrect = results[index];
+        resultIcon.setText(isCorrect ? "✓" : "✗");
+        resultIcon.setTextColor(isCorrect ? Color.GREEN : Color.RED);
+
+        itemLayout.setBackgroundResource(isCorrect ? R.drawable.correct_item_background : R.drawable.incorrect_item_background);
+
+        if (showSolutions) {
+            correctAnswerText.setVisibility(View.VISIBLE);
+            correctAnswerText.setText("Solution : " + correctAnswers.get(index));
+        } else {
+            correctAnswerText.setVisibility(View.GONE);
+        }
+
+        return resultItem;
     }
 
     private void launchCorrectionMode() {
@@ -101,4 +102,12 @@ public class ResultActivity extends AppCompatActivity {
         startActivity(correctionIntent);
         finish();
     }
+
+    private void navigateToHome() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
+    }
 }
+
