@@ -25,39 +25,37 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_account);
 
+        // Initialisation du dépôt utilisateur
         userRepository = new UserRepository(this);
 
+        // Récupération des vues
         loginLink = findViewById(R.id.loginButton);
         createAccountButton = findViewById(R.id.createAccountButton);
-
         usernameInputLayout = findViewById(R.id.usernameInputLayout);
         emailInputLayout = findViewById(R.id.emailInputLayout);
         passwordInputLayout = findViewById(R.id.passwordInputLayout);
         confirmPasswordInputLayout = findViewById(R.id.confirmPasswordInputLayout);
 
-        loginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        // Action de redirection vers la page de connexion
+        loginLink.setOnClickListener(v -> {
+            Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
+            startActivity(intent);
+            // Utilisation de finish pour garantir que cette activité n’est pas gardée dans la pile
+            finish();
         });
 
-        createAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createNewAccount();
-            }
-        });
+        // Action pour créer un compte utilisateur
+        createAccountButton.setOnClickListener(v -> createNewAccount());
     }
 
     private void createNewAccount() {
+        // Récupération des données saisies par l'utilisateur
         String username = usernameInputLayout.getEditText().getText().toString().trim();
         String email = emailInputLayout.getEditText().getText().toString().trim();
         String password = passwordInputLayout.getEditText().getText().toString();
         String confirmPassword = confirmPasswordInputLayout.getEditText().getText().toString();
 
+        // Validation des champs
         if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
             return;
@@ -68,12 +66,17 @@ public class CreateAccountActivity extends AppCompatActivity {
             return;
         }
 
+        // Création du nouvel utilisateur
         final User newUser = new User(username, email, password);
-        userRepository.insert(newUser);
+        userRepository.insert(newUser); // Insertion dans la base de données
 
+        // Message de confirmation
         Toast.makeText(this, "Compte créé avec succès", Toast.LENGTH_SHORT).show();
+
+        // Transition vers l'activité de connexion avec suppression de l'activité actuelle de la pile
         Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
         startActivity(intent);
-        finish();
+        finish(); // Garantie que l'utilisateur ne pourra pas revenir à cette activité après la création du compte
     }
 }
+

@@ -35,11 +35,11 @@ public class QuestionActivity extends AppCompatActivity {
         setContentView(R.layout.question);
 
         initializeViews();
-        getIntentData();
-        questionGenerator = new QuestionGenerator();
+        getIntentData(); // Récupère les données passées par l'intent (game, difficulty, level)
+        questionGenerator = new QuestionGenerator(); // Générateur de questions selon la difficulté
 
-        loadQuestion();
-        setupListeners();
+        loadQuestion(); // Charge la question selon l'index courant
+        setupListeners(); // Initialise les listeners pour les boutons
     }
 
     private void initializeViews() {
@@ -56,7 +56,7 @@ public class QuestionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         game = intent.getStringExtra("game");
         difficulty = intent.getStringExtra("difficulty");
-        currentQuestionIndex = intent.getIntExtra("level", 1)-1;
+        currentQuestionIndex = intent.getIntExtra("level", 1) - 1;
     }
 
     private void setupListeners() {
@@ -122,11 +122,10 @@ public class QuestionActivity extends AppCompatActivity {
         loadQuestion();
     }
 
-
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        // Sauvegarde l'état courant en cas de recréation de l'activité (rotation, mémoire faible, etc.)
         outState.putInt("currentQuestionIndex", currentQuestionIndex);
         outState.putString("game", game);
         outState.putString("difficulty", difficulty);
@@ -135,17 +134,19 @@ public class QuestionActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        // Restaure les données sauvegardées avec onSaveInstanceState
         currentQuestionIndex = savedInstanceState.getInt("currentQuestionIndex");
         game = savedInstanceState.getString("game");
         difficulty = savedInstanceState.getString("difficulty");
-        loadQuestion();
+        loadQuestion(); // Recharge la bonne question après restauration
     }
 
     private void onBackButtonClick() {
-        // Retour propre à l'activité précédente
+        // Nettoie la pile des activités pour éviter les duplications
         Intent intent = new Intent(this, ChooseLevel.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
-        finish();
+        finish(); // Termine cette activité pour ne pas la garder dans la pile
     }
 }
+

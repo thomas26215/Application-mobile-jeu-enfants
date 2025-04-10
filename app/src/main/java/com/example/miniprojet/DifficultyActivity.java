@@ -22,19 +22,22 @@ public class DifficultyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_difficulty);
 
+        // Récupération des vues
         gameTitleTextView = findViewById(R.id.gameTitle);
         easyModeCard = findViewById(R.id.easyModeCard);
         mediumModeCard = findViewById(R.id.mediumModeCard);
         hardModeCard = findViewById(R.id.hardModeCard);
         startGameButton = findViewById(R.id.startGameButton);
 
+        // Récupération du nom du jeu via l'intent
         String gameName = getIntent().getStringExtra("game");
         gameTitleTextView.setText(gameName);
 
-        // Définir les couleurs
+        // Définir les couleurs par défaut et sélectionnées des cartes
         defaultCardColor = ContextCompat.getColor(this, R.color.white);
         selectedCardColor = ContextCompat.getColor(this, R.color.primary_light);
 
+        // Définition du listener pour la sélection des cartes
         View.OnClickListener cardClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,34 +45,43 @@ public class DifficultyActivity extends AppCompatActivity {
             }
         };
 
+        // Assignation du listener aux cartes
         easyModeCard.setOnClickListener(cardClickListener);
         mediumModeCard.setOnClickListener(cardClickListener);
         hardModeCard.setOnClickListener(cardClickListener);
 
+        // Lancement du jeu avec la difficulté sélectionnée
         startGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Envoie des données sur le jeu et la difficulté à l'activité suivante
                 Intent intent = new Intent(DifficultyActivity.this, ChooseLevel.class);
                 intent.putExtra("game", gameName);
                 intent.putExtra("difficulty", selectedDifficulty);
                 startActivity(intent);
+
+                // Finish pour empêcher le retour à cette activité depuis l'écran de niveau
+                finish();
             }
         });
 
-        // Sélectionner "Facile" par défaut
+        // Sélectionner "Facile" par défaut au lancement
         updateSelectedCard(easyModeCard);
     }
 
+    /**
+     * Met à jour la carte sélectionnée et la difficulté correspondante.
+     */
     private void updateSelectedCard(CardView selectedCard) {
-        // Réinitialiser toutes les cartes
+        // Réinitialisation de toutes les cartes (retour à la couleur par défaut)
         easyModeCard.setCardBackgroundColor(defaultCardColor);
         mediumModeCard.setCardBackgroundColor(defaultCardColor);
         hardModeCard.setCardBackgroundColor(defaultCardColor);
 
-        // Mettre à jour la carte sélectionnée
+        // Mise à jour de la carte sélectionnée avec la couleur sélectionnée
         selectedCard.setCardBackgroundColor(selectedCardColor);
 
-        // Mettre à jour la difficulté sélectionnée
+        // Mise à jour de la difficulté en fonction de la carte sélectionnée
         if (selectedCard == easyModeCard) {
             selectedDifficulty = "FACILE";
         } else if (selectedCard == mediumModeCard) {
@@ -78,4 +90,12 @@ public class DifficultyActivity extends AppCompatActivity {
             selectedDifficulty = "DIFFICILE";
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        // On empêche l'utilisateur de revenir à l'écran précédent
+        super.onBackPressed();
+        finish();  // Appel de finish() pour garantir qu'il ne reviendra pas à l'activité actuelle
+    }
 }
+
