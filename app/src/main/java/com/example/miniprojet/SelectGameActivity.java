@@ -49,7 +49,15 @@ public class SelectGameActivity extends AppCompatActivity {
             finish(); // Fermer l'activité actuelle
         });
 
+        // Désactiver certains jeux (griser)
+        disableGame(cultureGame3); // Exemple : désactiver ce jeu spécifique
     }
 
+    // Fonction pour désactiver un jeu
+    private void disableGame(CardView gameCard) {
+        gameCard.setCardBackgroundColor(getResources().getColor(R.color.disabled_game)); // Gris
+        gameCard.setClickable(false); // Désactiver le clic
+        gameCard.setAlpha(0.5f); // Ajouter un effet visuel (transparence)
+    }
 }
 
